@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kr.bitegov.restful.practice.iml" filepath="$PROJECT_DIR$/.idea/modules/kr.bitegov.restful.practice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kr.bitegov.restful.practice_main.iml" filepath="$PROJECT_DIR$/.idea/modules/kr.bitegov.restful.practice_main.iml" group="kr.bitegov.restful.practice" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kr.bitegov.restful.practice_test.iml" filepath="$PROJECT_DIR$/.idea/modules/kr.bitegov.restful.practice_test.iml" group="kr.bitegov.restful.practice" />
+    </modules>
+  </component>
+</project>
