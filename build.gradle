@@ -11,10 +11,19 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web:1.4.1.RELEASE")
-    compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:1.1.1") // Spring Boot에 mybatis lib 제공
     compile "org.springframework.boot:spring-boot-starter-jdbc"
     compile("org.springframework:spring-jdbc")
     testCompile group: 'junit', name: 'junit', version: '4.11'
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    // https://mvnrepository.com/artifact/org.apache.jena/jena-core
+    compile group: 'org.apache.jena', name: 'jena-core', version: '3.1.0'
+    // https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter
+    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.1.1'
+    // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
+    compile group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '0.21.0.RELEASE'
+    // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
+    compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.2.0'
+
+
 }
