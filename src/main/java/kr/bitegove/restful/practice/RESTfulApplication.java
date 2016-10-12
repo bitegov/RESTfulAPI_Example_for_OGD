@@ -10,13 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -27,40 +23,88 @@ public class RESTfulApplication {
     public static void main(String[] args) {
         SpringApplication.run(RESTfulApplication.class, args);
     }
+
     @RestController
     public static class EnterpriseController {
 
         @Autowired
         EnterpriseMapper enterpriseMapper;
 
-        @RequestMapping("enterprises")
-        public HttpEntity<Enterprise> enterprises(@RequestParam("amount") String amount) {
-            //뒤에 불필요하게 붙는 ; 제거 및 int형으로 변환
-            int cleanAmount = Integer.parseInt(amount.replaceAll("[^0-9]", ""));
-            System.out.println(cleanAmount);
-            Enterprise enterprise = new Enterprise(amount);
-            List<Map<String, Object>> en =enterpriseMapper.findAll(cleanAmount);
+        @RequestMapping(value = "enterprises",method = RequestMethod.GET)
+        public HttpEntity<Enterprise> enterprises() {
+           return enterprises(10);
+        }
+
+        //Using Request HTTP Method followed Basic concept.
+        @RequestMapping(value = "enterprises",method = RequestMethod.GET, params = {"amount"})
+        public HttpEntity<Enterprise> enterprises(@RequestParam("amount") int amount) {
+
+           /* //Removing ; and Translating String to int
+            int cleanAmount = Integer.parseInt(amount.replaceAll("[^0-9]", ""));*/
+            System.out.println(amount);
+            Enterprise enterprise = new Enterprise();
+            List<EnModel> en = enterpriseMapper.findAll(amount);
             enterprise.setEnInfo(en);
-            //링크를 추가 함.
+
+            //Adding URI on the document level as Information
             enterprise.add(linkTo(EnterpriseController.class).withRel("endpoint"));
             enterprise.add(linkTo(methodOn(EnterpriseController.class).enterprises(amount)).withSelfRel());
+
+            //Using Response HTTP Method followed Basic concept.
             return new ResponseEntity<Enterprise>(enterprise, HttpStatus.OK);
         }
 
-        @RequestMapping("enterprises/{id}")
-        public Map<String, Object> member(@PathVariable("id") Long id) {
-            return enterpriseMapper.findById(id);
+        //Using Request HTTP Method followed Basic concept.
+        //@Overload
+        @RequestMapping(value = "enterprises",method = RequestMethod.GET, params = {"name"})
+        public HttpEntity<Enterprise> enterprises(@RequestParam("name") String name) {
+
+            Enterprise enterprise = new Enterprise();
+            List<EnModel> en = enterpriseMapper.findByName(name);
+            enterprise.setEnInfo(en);
+
+            //Adding URI on the document level as Information
+            enterprise.add(linkTo(EnterpriseController.class).withRel("endpoint"));
+            enterprise.add(linkTo(methodOn(EnterpriseController.class).enterprises(name)).withSelfRel());
+
+            //Using Response HTTP Method followed Basic concept.
+            return new ResponseEntity<Enterprise>(enterprise, HttpStatus.OK);
         }
+
+        @RequestMapping("enterprise/{id}")
+        public HttpEntity<EnModel> findEnterpriseById(@PathVariable("id") Long id) {
+            EnModel  enModel = enterpriseMapper.findById(id);
+            ResponseEntity<EnModel> responseEntity;
+            if(enModel.getCITY()==null){
+                enModel = new EnModel();
+            }
+            return new ResponseEntity<EnModel>(enModel, HttpStatus.OK);
+        }
+
+
+        @Mapper
+        interface EnterpriseMapper {
+            @Select("SELECT ID, CITY, NAME FROM enterprises LIMIT #{amount}")
+            List<EnModel> findAll(int amount);
+
+            @Select("SELECT ID, CITY, NAME FROM enterprises WHERE ID = #{id}")
+            EnModel findById(Long id);
+
+            @Select("SELECT ID, CITY, NAME FROM enterprises WHERE NAME = #{name}")
+            List<EnModel> findByName(String name);
+        }
+//// TODO: 2016-10-12 RDF 포맷지원
+/*        @RequestMapping("enterprises")
+        public HttpEntity<Enterprise> enterprises(@RequestParam("amount") String amount, @RequestParam("format") String format) {
+            if (format.equals("rdf") || format.equals("RDF")) {
+                HttpEntity<Enterprise> enterprises = enterprises(amount);
+                enterprises.getBody();
+
+                return enterprises;
+            } else {
+                return enterprises(amount);
+            }
+        }*/
     }
-
-    @Mapper
-    interface EnterpriseMapper {
-        @Select("SELECT CITY, NAME FROM enterprises LIMIT #{amount}")
-        List<Map<String, Object>> findAll(int amount);
-
-        @Select("SELECT CITY, NAME, PHONE FROM MEMBER WHERE ID = #{id}")
-        Map<String, Object> findById(Long id);
-    }
-
 
 }

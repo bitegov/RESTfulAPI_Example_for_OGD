@@ -12,29 +12,23 @@ import java.util.Map;
  */
 public class Enterprise extends ResourceSupport {
 
-    private List<Map<String, Object>> enInfo;
-    private String amount;
+    private List<EnModel> enInfo;
 
+   /* private String amount;
     @JsonCreator
     public Enterprise(@JsonProperty("amount") String amount){
         this.amount = amount;
-    }
+    }*/
 
-    public List<Map<String, Object>> getEnInfo() {
+    public List<EnModel> getEnInfo() {
         return enInfo;
     }
 
-    public void setEnInfo(List<Map<String, Object>> enInfo) {
+    public void setEnInfo(List<EnModel> enInfo) {
         this.enInfo = enInfo;
     }
 
-    public String getAmount() {
-        return amount;
-    }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
 
 
 }
